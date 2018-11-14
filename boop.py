@@ -26,15 +26,16 @@ dynamodb = boto3.resource('dynamodb',
 
 table = dynamodb.Table('ost_data')
 
+start_date = '2018-10-01T01'
+end_date = '2018-10-01T05'
 
-response = table.scan(FilterExpression=Key('time').between('2018-10-01T01',
-                                                           '2018-10-01T05'))
+
+response = table.scan(FilterExpression=Key('time').between(start_date, end_date))
 data = response['Items']
 
 while response.get('LastEvaluatedKey'):
     response = table.scan(
-        FilterExpression=Key('time').between('2018-10-01T01',
-                                             '2018-10-01T05'),
+        FilterExpression=Key('time').between(start_date, end_date),
         ExclusiveStartKey=response['LastEvaluatedKey'])
 
     data.extend(response['Items'])
